@@ -1,0 +1,21 @@
+version: '3.5'
+
+services:
+  router:
+    container_name: router
+    image: traefik
+    command: --docker --docker.watch --web --logLevel=DEBUG
+    ports:
+      - 80:80
+      - 443:443
+      - 8080:8080
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - router
+    restart: always
+
+networks:
+  router:
+    name: router
+    driver: bridge
