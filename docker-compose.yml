@@ -4,13 +4,18 @@ services:
   router:
     container_name: router
     image: traefik
-    command: --docker --docker.watch --web --logLevel=DEBUG
+    command: --docker --docker.watch --web
+            --defaultEntryPoints="http,https"
+            --entryPoints="Name:https Address::443 TLS:/certs/fullchain.pem,/certs/privkey.pem"
+            --entryPoints="Name:http Address::80"
+            --logLevel=DEBUG
     ports:
       - 80:80
       - 443:443
       - 8080:8080
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - ./certs:/certs
     networks:
       - router
     restart: always
