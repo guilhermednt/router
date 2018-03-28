@@ -4,7 +4,13 @@ Simple Traefik router. Good for local development.
 
 # Usage
 
-First start the HTTP router itself. Run the following command on the route of this repository:
+## TLS
+
+The first step is to copy your HTTPS certificate and key into the `certs/` directory. Name your certificate `fullchain.pem` and your key `privkey.pem`. That's the default names from Let's Encrypt.
+
+## Using this router
+
+Just start the router itself with the following command on the root of this repository:
 
     $ docker-compose up -d
 
@@ -18,7 +24,8 @@ services:
     image: my/service
     labels:
       - "traefik.frontend.entryPoints=http"
-      - "traefik.frontend.rule=Host:my_service.localhost" # assuming you redirect *.localhost to 127.0.0.1
+      # assuming you redirect *.local.yourdomain to 127.0.0.1:
+      - "traefik.frontend.rule=Host:my_service.local.yourdomain"
     networks:
       - router
     restart: always
