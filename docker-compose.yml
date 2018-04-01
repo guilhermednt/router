@@ -6,7 +6,7 @@ services:
     image: traefik:v1.6
     command: --docker --docker.watch --docker.exposedbydefault=false --web \
             --defaultEntryPoints="http,https" \
-            --entryPoints="Name:https Address::443 TLS" \
+            --entryPoints="Name:https Address::443 TLS:/certs/fullchain.pem,/certs/privkey.pem" \
             --entryPoints="Name:http Address::80" \
             --acme=true --acme.caserver=https://acme-v02.api.letsencrypt.org/directory \
             --acme.email=$ACME_EMAIL --acme.onhostrule=true --acme.acmelogging=true \
@@ -19,6 +19,7 @@ services:
       - 8080:8080
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./certs:/certs:ro"
       - "./certs/acme/acme.json:/etc/traefik/conf/acme.json:rw"
     networks:
       - router
