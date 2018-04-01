@@ -20,7 +20,7 @@ services:
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
       - "./certs:/certs:ro"
-      - "./certs/acme/acme.json:/etc/traefik/conf/acme.json:rw"
+      - "./acme.json:/etc/traefik/conf/acme.json:rw"
     networks:
       - router
     env_file:
