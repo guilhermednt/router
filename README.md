@@ -23,6 +23,7 @@ services:
   my_service:
     image: my/service
     labels:
+      - "traefik.enable=true"
       - "traefik.frontend.entryPoints=http"
       # assuming you redirect *.local.yourdomain to 127.0.0.1:
       - "traefik.frontend.rule=Host:my_service.local.yourdomain"
