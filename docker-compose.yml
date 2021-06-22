@@ -3,7 +3,7 @@ version: '3.5'
 services:
   router:
     container_name: router
-    image: traefik:v1.6
+    image: traefik:v1.7
     command: --docker --docker.watch --docker.exposedbydefault=false --web \
             --defaultEntryPoints="http,https" \
             --entryPoints="Name:https Address::443 TLS" \
@@ -12,7 +12,7 @@ services:
             --acme.email=$ACME_EMAIL --acme.onhostrule=true --acme.acmelogging=true \
             --acme.entrypoint=https --acme.dnschallenge=true --acme.dnschallenge.provider=$DNS_PROVIDER \
             --acme.storage="/etc/traefik/conf/acme.json" \
-            --logLevel=DEBUG
+            --logLevel=INFO
     ports:
       - 80:80
       - 443:443
