@@ -3,21 +3,28 @@ version: '3.5'
 services:
   router:
     container_name: router
-    image: traefik
-    command: --docker --docker.watch --web
-            --defaultEntryPoints="http,https"
-            --entryPoints="Name:https Address::443 TLS:/certs/fullchain.pem,/certs/privkey.pem"
-            --entryPoints="Name:http Address::80"
-            --logLevel=DEBUG
+    image: traefik:v1.7
+    command: --docker --docker.watch --docker.exposedbydefault=false --web \
+            --defaultEntryPoints="http,https" \
+            --entryPoints="Name:https Address::443 TLS" \
+            --entryPoints="Name:http Address::80" \
+            --acme=true --acme.caserver=https://acme-v02.api.letsencrypt.org/directory \
+            --acme.email=$ACME_EMAIL --acme.onhostrule=true --acme.acmelogging=true \
+            --acme.entrypoint=https --acme.dnschallenge=true --acme.dnschallenge.provider=$DNS_PROVIDER \
+            --acme.storage="/etc/traefik/conf/acme.json" \
+            --logLevel=INFO
     ports:
       - 80:80
       - 443:443
       - 8080:8080
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ./certs:/certs
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./certs:/certs:ro"
+      - "./acme.json:/etc/traefik/conf/acme.json:rw"
     networks:
       - router
+    env_file:
+      - .env
     restart: always
 
 networks:
