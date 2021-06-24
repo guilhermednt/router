@@ -1,33 +1,30 @@
-version: '3.5'
+version: '3.3'
+
+networks:
+  web:
+    external: true
 
 services:
   router:
     container_name: router
-    image: traefik:v1.7
-    command: --docker --docker.watch --docker.exposedbydefault=false --web \
-            --defaultEntryPoints="http,https" \
-            --entryPoints="Name:https Address::443 TLS" \
-            --entryPoints="Name:http Address::80" \
-            --acme=true --acme.caserver=https://acme-v02.api.letsencrypt.org/directory \
-            --acme.email=$ACME_EMAIL --acme.onhostrule=true --acme.acmelogging=true \
-            --acme.entrypoint=https --acme.dnschallenge=true --acme.dnschallenge.provider=$DNS_PROVIDER \
-            --acme.storage="/etc/traefik/conf/acme.json" \
-            --logLevel=INFO
+    image: traefik:v2.4
+    command: --certificatesresolvers.lets-encrypt.acme.email=$ACME_EMAIL \
+             --certificatesresolvers.myresolver.acme.dnschallenge.provider=$DNS_PROVIDER
+    network_mode: host
     ports:
-      - 80:80
-      - 443:443
-      - 8080:8080
+      - target: 80
+        published: 80
+        mode: host
+      - target: 443
+        published: 443
+        mode: host
     volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock:ro"
-      - "./certs:/certs:ro"
-      - "./acme.json:/etc/traefik/conf/acme.json:rw"
-    networks:
-      - router
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./traefik.toml:/traefik.toml:ro
+      - ./traefik_dynamic.toml:/traefik_dynamic.toml:ro
+      - ./acme.json:/acme.json
+      - ./users:/app/users:ro
     env_file:
       - .env
-    restart: always
+    restart: unless-stopped
 
-networks:
-  router:
-    name: router
-    driver: bridge
