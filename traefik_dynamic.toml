@@ -3,16 +3,15 @@
     usersFile = "/app/users"
 
   [http.middlewares.secHeaders.headers]
-    [http.middlewares.secHeaders.headers.customResponseHeaders]
-      browserXssFilter = true
-      contentTypeNosniff = true
-      frameDeny = true
-      sslRedirect = true
-      forceSTSHeader = true
-      stsIncludeSubdomains = true
-      stsPreload = true
-      stsSeconds = 31536000
-      sslForceHost = true
+    browserXssFilter = true
+    contentTypeNosniff = true
+    frameDeny = true
+    sslRedirect = true
+    forceSTSHeader = true
+    stsIncludeSubdomains = true
+    stsPreload = true
+    stsSeconds = 31536000
+    sslForceHost = true
 
 [tls.options]
   [tls.options.default]
