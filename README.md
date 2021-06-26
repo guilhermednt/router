@@ -38,7 +38,7 @@ services:
     image: my/service
     labels:
       - traefik.enable=true
-      - traefik.http.routers.donato.rule=Host(`example.com`, `*.example.com`)
+      - traefik.http.routers.donato.rule=Host(`example.com`)
       - traefik.http.routers.donato.tls=true
       - traefik.http.routers.donato.tls.certResolver=lets-encrypt
       - traefik.http.routers.donato.middlewares=secHeaders@file
